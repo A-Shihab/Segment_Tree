@@ -1,4 +1,4 @@
-// Segment tree for 0 based index
+// 0 based segment tree
 
 #include<bits/stdc++.h>
 using namespace std;
@@ -9,7 +9,7 @@ using namespace std;
 #define for1(i, n) for(ll i = 0; i < n; i++)
 #define fast() ios::sync_with_stdio(false); cin.tie(0)
 
-void build(ll ind,ll low, ll high, ll arr[], ll seg[])
+void build(ll ind, ll low, ll high, ll arr[], ll seg[])
 {
     if(low == high)
     {
@@ -17,25 +17,25 @@ void build(ll ind,ll low, ll high, ll arr[], ll seg[])
         return;
     }
     
-    ll mid = (low+high)/2;
+    ll mid = (low + high) / 2;
     
-    build(2*ind+1, low, mid, arr, seg);
-    build(2*ind+2, mid+1, high, arr, seg);
-    seg[ind] = min(seg[2*ind+1],seg[2*ind+2]);
+    build(2 * ind + 1, low, mid, arr, seg);
+    build(2 * ind + 2, mid + 1, high, arr, seg);
+    seg[ind] = min(seg[2 * ind + 1], seg[2 * ind + 2]);
 }
 
-ll query(ll ind, ll low, ll high, ll l, ll r, seg[])
+ll query(ll ind, ll low, ll high, ll l, ll r, ll seg[])
 {
-    // No overloop
-    if(high<l || low>high)return INT_MAX;
+    // No overlap
+    if(high < l || low > r) return INT_MAX;
     
     // Complete overlap
-    if(low>=l && high<=r)return seg[ind];
+    if(low >= l && high <= r) return seg[ind];
     
-    //Partial overlap
-    ll mid=(low+high)/2;
-    ll left=query(2*ind+1, low, mid, l, r);
-    ll right=quer(2*ind+2, mid+1, high, l, r);
+    // Partial overlap
+    ll mid = (low + high) / 2;
+    ll left = query(2 * ind + 1, low, mid, l, r, seg);
+    ll right = query(2 * ind + 2, mid + 1, high, l, r, seg);
     return min(left, right);
 }
 
@@ -44,24 +44,24 @@ int main()
     fast();
     
     ll n;
-    cin>>n;
+    cin >> n;
     
     ll arr[n];
     
-    for1(i, n)cin>>arr[i];
+    for1(i, n) cin >> arr[i];
     
-    ll seg[4*n];
+    ll seg[4 * n];
     
-    build(0, 0, n-1, arr, seg);
+    build(0, 0, n - 1, arr, seg);
     
     ll q;
-    cin>>q;
+    cin >> q;
     
     while(q--)
     {
         ll l, r;
-        cin>>l>>r;
+        cin >> l >> r;
         
-        cout<<query(0, 0, n-1, l, r, seg)<<endl;
+        cout << query(0, 0, n - 1, l, r, seg) << endl;
     }
 }
